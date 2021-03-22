@@ -89,8 +89,8 @@ struct Place {
     CoordHash coordinateHashed;
 };
 
-std::unordered_map <PlaceID, Name> placeIdAndNamesmap;
 
+std::unordered_map <PlaceID, Name> placeId_names_map;
 // This is the class you are supposed to implement
 
 class Datastructures
@@ -199,6 +199,7 @@ public:
 
 private:
     // Add stuff needed for your class implementation here
+
 
 };
 
