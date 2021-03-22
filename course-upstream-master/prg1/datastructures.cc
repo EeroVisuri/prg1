@@ -26,10 +26,8 @@ Type random_in_range(Type start, Type end)
 
 Datastructures::Datastructures()
 {
-    // Replace this comment with your implementation
-
-
-    
+    //Initializing the unordered map we need and other stuff
+    placeId_names_map = {};
 }
 
 Datastructures::~Datastructures()
@@ -39,8 +37,10 @@ Datastructures::~Datastructures()
 
 int Datastructures::place_count()
 {
-    // Replace this comment with your implementation
-    return 0;
+    //returns how many places there have been saved to the map
+    int places = placeId_names_map.size();
+
+    return places;
 }
 
 void Datastructures::clear_all()
@@ -56,8 +56,8 @@ std::vector<PlaceID> Datastructures::all_places()
 
 bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coord xy)
 {
-    // Replace this comment with your implementation
-    return false;
+    placeId_names_map.insert({id, name});
+    return true;
 }
 
 std::pair<Name, PlaceType> Datastructures::get_place_name_type(PlaceID id)

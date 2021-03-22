@@ -90,7 +90,8 @@ struct Place {
 };
 
 
-std::unordered_map <PlaceID, Name> placeId_names_map;
+
+
 // This is the class you are supposed to implement
 
 class Datastructures
@@ -199,7 +200,7 @@ public:
 
 private:
     // Add stuff needed for your class implementation here
-
+    std::unordered_map <PlaceID, Name> placeId_names_map;
 
 };
 
