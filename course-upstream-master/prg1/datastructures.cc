@@ -45,7 +45,10 @@ int Datastructures::place_count()
 
 void Datastructures::clear_all()
 {
-    // Replace this comment with your implementation
+    // Clears all the maps.
+    placeId_names_map.clear();
+    placeID_type_map.clear();
+    placeID_coord_map.clear();
 }
 
 std::vector<PlaceID> Datastructures::all_places()
@@ -68,19 +71,37 @@ bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coo
     }
 
     placeId_names_map.insert({id, name});
+    placeID_type_map.insert({id, type});
+    placeID_coord_map.insert({id, xy});
     return true;
 }
 
 std::pair<Name, PlaceType> Datastructures::get_place_name_type(PlaceID id)
 {
-    // Replace this comment with your implementation
-    return {NO_NAME, PlaceType::NO_TYPE};
+    //runs two iterators, maybe we worry about optimization later :/
+    std::unordered_map<PlaceID, Name>::const_iterator name_iter = placeId_names_map.find(id);
+    std::unordered_map<PlaceID, PlaceType>::const_iterator place_iter = placeID_type_map.find(id);
+    //if we can't find the name before we run out of map, return NO_NAME and NO_TYPE consts
+    if (name_iter == placeId_names_map.end()) {
+        return {NO_NAME, PlaceType::NO_TYPE};
+    }
+    //otherwise we can return the name and the placetype
+    return {name_iter->second, place_iter->second};
+
 }
 
 Coord Datastructures::get_place_coord(PlaceID id)
 {
-    // Replace this comment with your implementation
-    return NO_COORD;
+    //Iterator goes through placeID_coord_map, until it finds given ID and returns the coordinates
+    std::unordered_map<PlaceID, Coord>::const_iterator coord_iter = placeID_coord_map.find(id);
+
+    //if it can't find given ID before we run through the map, we return NO_COORD
+    if (coord_iter == placeID_coord_map.end()) {
+        return NO_COORD;
+    }
+
+    return coord_iter->second;
+
 }
 
 bool Datastructures::add_area(AreaID id, const Name &name, std::vector<Coord> coords)

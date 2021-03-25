@@ -94,16 +94,16 @@ public:
     // Short rationale for estimate: Calling .size() on a map is a constant time operation.
     int place_count();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Linear on size, because it goes through all the items in maps.
     void clear_all();
 
     // Estimate of performance: O(n)
-    // Short rationale for estimate: Function has a for-loop, which executes n times.
+    // Short rationale for estimate: Linear, because function has a for-loop, which executes n times.
     std::vector<PlaceID> all_places();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(log(n))
+    // Short rationale for estimate: Goes through placeId_names_map, then inserts into 3 other maps. Will optimize.
     bool add_place(PlaceID id, Name const& name, PlaceType type, Coord xy);
 
     // Estimate of performance:
@@ -190,7 +190,6 @@ public:
 
 private:
     // Add stuff needed for your class implementation here
-    std::unordered_map <PlaceID, Name> placeId_names_map;
 
     // A struct to store info about our places. Maybe we don't need this tho.
     struct Place {
@@ -202,6 +201,12 @@ private:
         PlaceType type;
         CoordHash coordinateHashed;
     };
+
+
+    std::unordered_map <PlaceID, Name> placeId_names_map;
+    //std::unordered_map <PlaceID, Place> placeId_Places_map; maybe not this
+    std::unordered_map <PlaceID, PlaceType> placeID_type_map = {};
+    std::unordered_map <PlaceID, Coord> placeID_coord_map = {};
 
 
 };
