@@ -51,11 +51,22 @@ void Datastructures::clear_all()
 std::vector<PlaceID> Datastructures::all_places()
 {
     // Replace this comment with your implementation
-    return {};
+    std::vector<PlaceID>places_to_return;
+
+    for (std::pair<PlaceID, Name> elem : placeId_names_map) {
+        places_to_return.push_back(elem.first);
+    }
+    return places_to_return;
 }
 
 bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coord xy)
 {
+
+    //if given ID already exist, return false
+    if (placeId_names_map.count(id) > 0) {
+        return false;
+    }
+
     placeId_names_map.insert({id, name});
     return true;
 }

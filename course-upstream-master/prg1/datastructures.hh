@@ -78,16 +78,6 @@ Distance const NO_DISTANCE = NO_VALUE;
 
 
 
-// A struct to store info about our places. Maybe we don't need this tho.
-struct Place {
-    PlaceID id;
-    AreaID areaId;
-    Name name;
-    WayID wayId;
-    Coord coordinates;
-    PlaceType type;
-    CoordHash coordinateHashed;
-};
 
 
 
@@ -100,16 +90,16 @@ public:
     Datastructures();
     ~Datastructures();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(1)
+    // Short rationale for estimate: Calling .size() on a map is a constant time operation.
     int place_count();
 
     // Estimate of performance:
     // Short rationale for estimate:
     void clear_all();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Function has a for-loop, which executes n times.
     std::vector<PlaceID> all_places();
 
     // Estimate of performance:
@@ -201,6 +191,18 @@ public:
 private:
     // Add stuff needed for your class implementation here
     std::unordered_map <PlaceID, Name> placeId_names_map;
+
+    // A struct to store info about our places. Maybe we don't need this tho.
+    struct Place {
+        PlaceID id;
+        AreaID areaId;
+        Name name;
+        WayID wayId;
+        Coord coordinates;
+        PlaceType type;
+        CoordHash coordinateHashed;
+    };
+
 
 };
 
