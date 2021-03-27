@@ -27,7 +27,7 @@ Type random_in_range(Type start, Type end)
 Datastructures::Datastructures()
 {
     //Initializing the unordered map we need and other stuff
-    placeId_names_map = {};
+    placeID_names_map = {};
 }
 
 Datastructures::~Datastructures()
@@ -38,7 +38,7 @@ Datastructures::~Datastructures()
 int Datastructures::place_count()
 {
     //returns how many places there have been saved to the map
-    int places = placeId_names_map.size();
+    int places = placeID_names_map.size();
 
     return places;
 }
@@ -46,17 +46,17 @@ int Datastructures::place_count()
 void Datastructures::clear_all()
 {
     // Clears all the maps.
-    placeId_names_map.clear();
+    placeID_names_map.clear();
     placeID_type_map.clear();
     placeID_coord_map.clear();
 }
 
 std::vector<PlaceID> Datastructures::all_places()
 {
-    // Replace this comment with your implementation
+
     std::vector<PlaceID>places_to_return;
 
-    for (std::pair<PlaceID, Name> elem : placeId_names_map) {
+    for (std::pair<PlaceID, Name> elem : placeID_names_map) {
         places_to_return.push_back(elem.first);
     }
     return places_to_return;
@@ -66,11 +66,11 @@ bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coo
 {
 
     //if given ID already exist, return false
-    if (placeId_names_map.count(id) > 0) {
+    if (placeID_names_map.count(id) > 0) {
         return false;
     }
 
-    placeId_names_map.insert({id, name});
+    placeID_names_map.insert({id, name});
     placeID_type_map.insert({id, type});
     placeID_coord_map.insert({id, xy});
     return true;
@@ -79,12 +79,13 @@ bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coo
 std::pair<Name, PlaceType> Datastructures::get_place_name_type(PlaceID id)
 {
     //runs two iterators, maybe we worry about optimization later :/
-    std::unordered_map<PlaceID, Name>::const_iterator name_iter = placeId_names_map.find(id);
-    std::unordered_map<PlaceID, PlaceType>::const_iterator place_iter = placeID_type_map.find(id);
+    std::unordered_map<PlaceID, Name>::const_iterator name_iter = placeID_names_map.find(id);
     //if we can't find the name before we run out of map, return NO_NAME and NO_TYPE consts
-    if (name_iter == placeId_names_map.end()) {
+    if (name_iter == placeID_names_map.end()) {
         return {NO_NAME, PlaceType::NO_TYPE};
     }
+    std::unordered_map<PlaceID, PlaceType>::const_iterator place_iter = placeID_type_map.find(id);
+
     //otherwise we can return the name and the placetype
     return {name_iter->second, place_iter->second};
 
@@ -104,22 +105,46 @@ Coord Datastructures::get_place_coord(PlaceID id)
 
 }
 
+
+
 bool Datastructures::add_area(AreaID id, const Name &name, std::vector<Coord> coords)
 {
-    // Replace this comment with your implementation
-    return false;
+
+    //if we can find the ID before areaID_name map ends, it already exists and return false
+
+    if (areaID_name_map.find(id) != areaID_name_map.end()) {
+        return false;
+    }
+    //otherwise we can stick the information into our maps / maybe later into the struct
+    areaID_name_map.insert({id, name});
+    areaID_coord_map.insert({id, coords});
+
+    return true;
 }
 
 Name Datastructures::get_area_name(AreaID id)
 {
-    // Replace this comment with your implementation
-    return NO_NAME;
+    //iterate the area_ID_name map and if we can't find the AreaID, return NO_NAME
+    std::unordered_map<AreaID, Name>::const_iterator get_area_iter
+            = areaID_name_map.find(id);
+
+    if (get_area_iter == areaID_name_map.end()) {
+        return NO_NAME;
+    }
+    //If we do find the AreaID, return the name
+    return get_area_iter->second;
 }
 
 std::vector<Coord> Datastructures::get_area_coords(AreaID id)
 {
-    // Replace this comment with your implementation
-    return {NO_COORD};
+    //iterate the areaID_coord_map, if we can't find AreaID, return NO_NAME again
+    std::unordered_map<AreaID, std::vector<Coord>>::const_iterator got_coords_iter
+            = areaID_coord_map.find(id);
+    if (got_coords_iter == areaID_coord_map.end()) {
+        return {NO_COORD};
+    }
+    //business as usual here, return the name if we find the AreaID
+    return got_coords_iter->second;
 }
 
 void Datastructures::creation_finished()
@@ -140,36 +165,79 @@ std::vector<PlaceID> Datastructures::places_coord_order()
 {
     // Replace this comment with your implementation
     return {};
+
 }
 
 std::vector<PlaceID> Datastructures::find_places_name(Name const& name)
 {
-    // Replace this comment with your implementation
-    return {};
+
+    //vector for the placenames we wanna return
+    std::vector<PlaceID> placenames;
+    //for-loop is slow maybe optimize this?
+    //iterate through placeID_names map, push placenames into the vector if they match const& name
+    for (std::unordered_map<PlaceID, Name>::iterator iter = placeID_names_map.begin();
+         iter != placeID_names_map.end(); ++iter) {
+        if (iter->second == name) {
+            placenames.push_back(iter->first);
+        }
+    }
+
+    return placenames;
 }
 
 std::vector<PlaceID> Datastructures::find_places_type(PlaceType type)
 {
-    // Replace this comment with your implementation
-    return {};
+    //vector for placeID's
+    std::vector<PlaceID> placeIDs;
+    //for-loop again maybe look into it when optimizing?
+    //iterate through the map, push placeID's into the vector when they match PlaceType type
+    for (std::unordered_map<PlaceID, PlaceType>::iterator iter
+         = placeID_type_map.begin(); iter != placeID_type_map.end(); ++iter) {
+
+        if (iter->second == type) {
+            placeIDs.push_back(iter->first);
+        }
+    }
+    return placeIDs;
 }
 
 bool Datastructures::change_place_name(PlaceID id, const Name& newname)
 {
-    // Replace this comment with your implementation
-    return false;
+    //if we count zero such ID's in the map, return false
+    if (placeID_names_map.count(id) < 1) {
+        return false;
+    }
+    //otherwise find said id, change it's name, return true
+    auto find = placeID_names_map.find(id);
+    find->second = newname;
+    return true;
 }
 
 bool Datastructures::change_place_coord(PlaceID id, Coord newcoord)
 {
-    // Replace this comment with your implementation
-    return false;
+    //if we count zero such ID's in the map, return false
+    if (placeID_coord_map.count(id) < 1) {
+        return false;
+    }
+    //otherwise find said id, change it's coordinates, return true
+    auto find = placeID_coord_map.find(id);
+    find->second = newcoord;
+    return true;
 }
 
 std::vector<AreaID> Datastructures::all_areas()
 {
-    // Replace this comment with your implementation
-    return {};
+    //vector for our areas
+    std::vector<AreaID> areas;
+
+    //for-loop, push the areas in areaID_name_map in the vector we made
+    std::cout << "all_areas" << std::endl;
+    for (std::pair<AreaID, Name> elem : areaID_name_map) {
+        areas.push_back(elem.first);
+    }
+
+    //return the vector
+    return areas;
 }
 
 bool Datastructures::add_subarea_to_area(AreaID id, AreaID parentid)

@@ -10,6 +10,8 @@
 #include <limits>
 #include <functional>
 #include <unordered_map>
+#include <map>
+#include <iostream>
 
 // Types for IDs
 using PlaceID = long int;
@@ -202,11 +204,18 @@ private:
         CoordHash coordinateHashed;
     };
 
-
-    std::unordered_map <PlaceID, Name> placeId_names_map;
     //std::unordered_map <PlaceID, Place> placeId_Places_map; maybe not this
+
+
+    std::unordered_map <PlaceID, Name> placeID_names_map = {};
+
     std::unordered_map <PlaceID, PlaceType> placeID_type_map = {};
+
     std::unordered_map <PlaceID, Coord> placeID_coord_map = {};
+
+    std::unordered_map <AreaID, Name> areaID_name_map = {};
+
+    std::unordered_map <AreaID, std::vector<Coord>> areaID_coord_map = {};
 
 
 };
