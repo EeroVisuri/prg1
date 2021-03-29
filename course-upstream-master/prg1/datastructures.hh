@@ -206,7 +206,7 @@ private:
 
     //std::unordered_map <PlaceID, Place> placeId_Places_map; maybe not this
 
-    bool coord_comp(const PlaceID &a, const PlaceID &b);
+    static bool coord_comp(std::pair<PlaceID, Coord> coordA, std::pair<PlaceID, Coord> coordB);
 
     std::unordered_map <AreaID, AreaID> subarea_map = {};
 

@@ -179,15 +179,21 @@ std::vector<PlaceID> Datastructures::places_alphabetically()
 
 std::vector<PlaceID> Datastructures::places_coord_order()
 {
-    std::vector<PlaceID, Coord> closest_to_origo;
+    std::vector<std::pair<PlaceID, Coord>> closest_to_origo;
 
     for (auto& iter : placeID_coord_map) {
-        closest_to_origo.push_back(iter.first, iter.second);
+        closest_to_origo.push_back(std::make_pair(iter.first, iter.second));
     }
+
     std::sort (closest_to_origo.begin(), closest_to_origo.end(), coord_comp);
 
-    return closest_to_origo;
 
+    std::vector<PlaceID> coord_ordered_ids;
+
+    for (auto& iter2 : closest_to_origo) {
+        coord_ordered_ids.push_back(iter2.first);
+    }
+    return coord_ordered_ids;
 }
 
 std::vector<PlaceID> Datastructures::find_places_name(Name const& name)
@@ -303,28 +309,26 @@ AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
  * from origo. This was painful.
  */
 
-bool Datastructures::coord_comp(const PlaceID &a, const PlaceID &b)
+bool Datastructures::coord_comp(std::pair<PlaceID, Coord> coordA, std::pair<PlaceID, Coord> coordB)
 {
 
     //get the coordinates we need for comparison
-    Coord coordA = get_place_coord(a);
-    Coord coordB = get_place_coord(b);
     //calculate the euclidian distances from origo by using pythagoras
     //jesus christ
-    double coordAXdouble = pow(coordA.x, 2);
-    double coordAYdouble = pow(coordA.y, 2);
+    double coordAXdouble = pow(coordA.second.x, 2);
+    double coordAYdouble = pow(coordA.second.y, 2);
     double coordAdist = sqrt(coordAXdouble+coordAYdouble);
-    double coordBXdouble = pow(coordB.x, 2);
-    double coordBYdouble = pow(coordB.y, 2);
+    double coordBXdouble = pow(coordB.second.x, 2);
+    double coordBYdouble = pow(coordB.second.y, 2);
     double coordBdist = sqrt(coordBXdouble+coordBYdouble);
 
 
     //if distance is the same, we compare Y's, return smaller
     if (coordAdist == coordBdist) {
-        if ( coordB.y == coordB.y) {
+        if ( coordA.second.y == coordB.second.y) {
             return true;
         }
-        else if (coordA.y < coordB.y) {
+        else if (coordA.second.y < coordB.second.y) {
             return true;
         }
         else {
