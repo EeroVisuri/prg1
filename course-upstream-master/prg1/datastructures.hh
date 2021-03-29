@@ -206,6 +206,9 @@ private:
 
     //std::unordered_map <PlaceID, Place> placeId_Places_map; maybe not this
 
+    bool coord_comp(const PlaceID &a, const PlaceID &b);
+
+    std::unordered_map <AreaID, AreaID> subarea_map = {};
 
     std::unordered_map <PlaceID, Name> placeID_names_map = {};
 

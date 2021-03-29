@@ -157,14 +157,36 @@ void Datastructures::creation_finished()
 
 std::vector<PlaceID> Datastructures::places_alphabetically()
 {
-    // Replace this comment with your implementation
-    return {};
+
+    //this whole thing is awful with 2 for loops, gotta optimize somehow
+    std::vector<PlaceID>IDs_alphabetically;
+    //this map is going to be alphabetically sorted due to std::less<Name>
+    std::map<Name, PlaceID, std::less<Name>> alphabetic_order_map;
+
+    //iterate the unordered map, insert stuff into the regular map
+    std::unordered_map<PlaceID, Name>::iterator iter;
+    for (iter = placeID_names_map.begin(); iter != placeID_names_map.end(); iter++) {
+        alphabetic_order_map.insert(std::make_pair(iter->second, iter->first));
+    }
+    //put the stuff into the vector we're gonna return
+    //todo: check if we can just put stuff into the vector in alphabetic order
+    for (const auto& elem : alphabetic_order_map) {
+        IDs_alphabetically.push_back(elem.second);
+    }
+
+    return IDs_alphabetically;
 }
 
 std::vector<PlaceID> Datastructures::places_coord_order()
 {
-    // Replace this comment with your implementation
-    return {};
+    std::vector<PlaceID, Coord> closest_to_origo;
+
+    for (auto& iter : placeID_coord_map) {
+        closest_to_origo.push_back(iter.first, iter.second);
+    }
+    std::sort (closest_to_origo.begin(), closest_to_origo.end(), coord_comp);
+
+    return closest_to_origo;
 
 }
 
@@ -275,3 +297,49 @@ AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
     // Replace this comment with your implementation
     return NO_AREA;
 }
+
+/*
+ * A comparison function for calculating the distance of a coordinate
+ * from origo. This was painful.
+ */
+
+bool Datastructures::coord_comp(const PlaceID &a, const PlaceID &b)
+{
+
+    //get the coordinates we need for comparison
+    Coord coordA = get_place_coord(a);
+    Coord coordB = get_place_coord(b);
+    //calculate the euclidian distances from origo by using pythagoras
+    //jesus christ
+    double coordAXdouble = pow(coordA.x, 2);
+    double coordAYdouble = pow(coordA.y, 2);
+    double coordAdist = sqrt(coordAXdouble+coordAYdouble);
+    double coordBXdouble = pow(coordB.x, 2);
+    double coordBYdouble = pow(coordB.y, 2);
+    double coordBdist = sqrt(coordBXdouble+coordBYdouble);
+
+
+    //if distance is the same, we compare Y's, return smaller
+    if (coordAdist == coordBdist) {
+        if ( coordB.y == coordB.y) {
+            return true;
+        }
+        else if (coordA.y < coordB.y) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //else we return the smaller coordinate
+    else {
+        if (coordAdist < coordBdist) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
